@@ -1,0 +1,59 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: GardenOfInfiniteLove
+    network: bsc
+    source:
+      address: "0x743Ac5BE16DA070e7c12663D50Ab17A0c13ac4E2"
+      abi: GardenOfInfiniteLove
+      startBlock: 9000659
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FlowerPlanted
+      abis:
+        - name: GardenOfInfiniteLove
+          file: ./abis/GardenOfInfiniteLove.json
+      eventHandlers:
+        - event: FlowerPlanted(address,address)
+          handler: handleFlowerPlanted
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: Octalily
+    network: bsc
+    source:
+      abi: Octalily
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - Octalily
+        - PairedToken
+        - User
+      abis:
+        - name: Octalily
+          file: ./abis/Octalily.json
+        - name: Owned
+          file: ./abis/Owned.json
+      eventHandlers:
+        - event: WaveOfLove()
+          handler: handleWaveOfLove
+        - event: AnotherOctalilyBeginsToGrow(address)
+          handler: handlePetalGrown      
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      callHandlers:
+        - function: sharingIsCaring(address,address)
+          handler: handleSetOwners
+        - function: transferOwnership(address)
+          handler: handleTransferOwnership
+

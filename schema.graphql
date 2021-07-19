@@ -1,0 +1,36 @@
+type Octalily @entity {
+  # flower address
+  id: ID!
+
+  price: BigInt!
+  parentFlower: Octalily
+  pairedToken: PairedToken!
+
+  burnRate: BigInt!
+  totalFees: BigInt!
+  upPercent: BigInt!
+  upDelay: BigInt!
+  nonce: BigInt!
+
+  petalCount: BigInt
+  flowerBloomed: Boolean
+  petals: [Octalily!] @derivedFrom(field: "parentFlower")
+
+  owner: User!
+  owner2: User!
+  owner3: User!
+  pendingOwner: User
+}
+
+type PairedToken @entity {
+  id: ID!
+  flowers: [Octalily!] @derivedFrom(field: "pairedToken")
+}
+
+type User @entity {
+  id: ID!
+  ownedFlowers: [Octalily!] @derivedFrom(field: "owner")
+  owned2Flowers: [Octalily!] @derivedFrom(field: "owner2")
+  owned3Flowers: [Octalily!] @derivedFrom(field: "owner3")
+  pendingFlowers: [Octalily!] @derivedFrom(field: "pendingOwner")
+}
