@@ -14,10 +14,14 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - FlowerPlanted
+        - Octalily
       abis:
         - name: GardenOfInfiniteLove
           file: ./abis/GardenOfInfiniteLove.json
+        - name: Octalily
+          file: ./abis/Octalily.json
+        - name: Owned
+          file: ./abis/Owned.json
       eventHandlers:
         - event: FlowerPlanted(address,address)
           handler: handleFlowerPlanted
@@ -35,7 +39,6 @@ templates:
       file: ./src/mapping.ts
       entities:
         - Octalily
-        - PairedToken
         - User
       abis:
         - name: Octalily
@@ -45,15 +48,7 @@ templates:
       eventHandlers:
         - event: WaveOfLove()
           handler: handleWaveOfLove
-        - event: AnotherOctalilyBeginsToGrow(address)
-          handler: handlePetalGrown      
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
-      callHandlers:
-        - function: sharingIsCaring(address,address)
-          handler: handleSetOwners
-        - function: transferOwnership(address)
-          handler: handleTransferOwnership
-
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
