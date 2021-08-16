@@ -1,17 +1,26 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import {
-  GardenOfInfiniteLove,
   FlowerPlanted
 } from "../generated/GardenOfInfiniteLove/GardenOfInfiniteLove"
-import { Octalily as OctalilyContract, SharingIsCaringCall, Transfer, UpOnlyCall, WaveOfLove  } from "../generated/templates/Octalily/Octalily";
-import { Octalily, User } from "../generated/schema"
+import { Octalily as OctalilyContract, Transfer, WaveOfLove  } from "../generated/templates/Octalily/Octalily";
+import { Octalily, User, PairedToken } from "../generated/schema"
 import { OwnershipTransferred } from "../generated/templates/Octalily/Owned";
+import { Octalily as OctalilyTemplate } from '../generated/templates'
 
 export function handleFlowerPlanted(event: FlowerPlanted): void {
   let octalily = new Octalily(event.params.flower.toHexString());
-  octalily.pairedToken = event.params.pairedToken;
   let octalilyContract = OctalilyContract.bind(event.params.flower);
+  OctalilyTemplate.create(event.params.flower);
   octalily.price = octalilyContract.price();
+  octalily.burnRate = octalilyContract.burnRate();
+  octalily.totalFees = octalilyContract.totalFees();
+  octalily.upPercent = octalilyContract.upPercent();
+  octalily.upDelay = octalilyContract.upDelay();
+
+  let pairedToken = PairedToken.load(event.params.pairedToken.toHexString());
+  if (pairedToken === null) {
+    pairedToken = new PairedToken(event.params.pairedToken.toHexString());
+    pairedToken.save();
+  }
 
   let owner = User.load(octalilyContract.owner().toHexString());
   if (owner === null) {
@@ -31,6 +40,7 @@ export function handleFlowerPlanted(event: FlowerPlanted): void {
     owner3.save();
   }
 
+  octalily.pairedToken = pairedToken.id;
   octalily.owner = owner.id;
   octalily.owner2 = owner2.id;
   octalily.owner3 = owner3.id;
@@ -53,10 +63,6 @@ export function handleWaveOfLove(event: WaveOfLove): void {
     owner3 = new User(octalilyContract.owner3().toHexString());
     owner3.save();
   }
-
-  octalily.owner2 = owner2.id;
-  octalily.owner3 = owner3.id;
-
   octalily.save();
 }
 
@@ -67,7 +73,6 @@ export function handleOwnershipTransferred(event: OwnershipTransferred): void {
     owner = new User(event.params.newOwner.toHexString());
     owner.save();
   }
-
   octalily.owner = owner.id;
   octalily.save();
 }

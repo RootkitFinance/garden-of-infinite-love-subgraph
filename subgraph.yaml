@@ -39,6 +39,7 @@ templates:
       file: ./src/mapping.ts
       entities:
         - Octalily
+        - PairedToken
         - User
       abis:
         - name: Octalily

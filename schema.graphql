@@ -1,10 +1,22 @@
 type Octalily @entity {
   id: ID!
-  pairedToken: Bytes!
+  pairedToken: PairedToken!
   price: BigInt!
+
+  burnRate: BigInt!
+  totalFees: BigInt!
+  upPercent: BigInt!
+  upDelay: BigInt!
+  nonce: BigInt!
+
   owner: User!
   owner2: User!
   owner3: User!
+}
+
+type PairedToken @entity {
+  id: ID!
+  flowers: [Octalily!] @derivedFrom(field: "pairedToken")
 }
 
 type User @entity {
