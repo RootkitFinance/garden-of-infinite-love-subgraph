@@ -15,6 +15,7 @@ export function handleFlowerPlanted(event: FlowerPlanted): void {
   octalily.totalFees = octalilyContract.totalFees();
   octalily.upPercent = octalilyContract.upPercent();
   octalily.upDelay = octalilyContract.upDelay();
+  octalily.nonce = octalilyContract.nonce();
 
   let pairedToken = PairedToken.load(event.params.pairedToken.toHexString());
   if (pairedToken === null) {
